@@ -32,3 +32,20 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# Mac OS X generated
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows generated
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+group.txt
+g_docs_config.json
+Client/UnityProject/Assets/Plugins/Editor/JetBrains
+JetBrains.meta
