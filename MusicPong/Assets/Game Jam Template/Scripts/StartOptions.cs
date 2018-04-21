@@ -77,6 +77,7 @@ public class StartOptions : MonoBehaviour {
 		InMainMenu = false;
 		ChangeMusicOnStartIfAppropriate();
 		FadeAndDisableMenuPanel();
+		_showPanels.ShowGameplay();
 		StartCoroutine("UnpauseGameAfterMenuFaded");
 
 	}

@@ -16,4 +16,9 @@ public class BallSpawner : MonoBehaviour
 		else
 			Ball.transform.position = transform.position;
 	}
+
+	public void ResetBall()
+	{
+		Ball.transform.position = transform.position;
+	}
 }

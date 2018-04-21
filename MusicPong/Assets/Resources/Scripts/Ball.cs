@@ -18,8 +18,8 @@ public class Ball : MonoBehaviour
 
 	public void AddForce(float forceX, float forceY)
 	{
-//		Debug.LogError(forceX+ " : "+forceY);
-		_rigidbody2D.AddForce(new Vector2(forceX, forceY));
+		Debug.LogWarning("force y : "+forceY);
+		_rigidbody2D.AddRelativeForce(new Vector2(forceX, Mathf.Clamp(forceY,0, 15f)),ForceMode2D.Impulse);
 	}
 
 	private void OnCollisionEnter2D(Collision2D other)
@@ -27,7 +27,7 @@ public class Ball : MonoBehaviour
 		if (other.transform.CompareTag("Bound"))
 		{
 //			Debug.LogError("11111");
-			Manager.instance.OutOfBound();
+			Manager.Instance.OutOfBound();
 		}
 	}
 }

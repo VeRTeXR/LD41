@@ -28,7 +28,8 @@ public class Player : MonoBehaviour {
 	Animator _animator;
 	private Collider2D _ballCollider;
 	private Collider2D _collider;
-
+	private bool _isTappingAvailable = true;
+	
 	void Start()
 	{
 		_playerCurrentEnegy = _playerMaxEnegy;
@@ -37,7 +38,7 @@ public class Player : MonoBehaviour {
 		_collider = GetComponent<BoxCollider2D>();
 	}
 
-	void Update()
+	private void FixedUpdate()
 	{
 		var input = Input.GetAxisRaw("Horizontal");
 
@@ -45,22 +46,30 @@ public class Player : MonoBehaviour {
 			Restart();
 		}
 
-		if (Input.GetKeyDown (KeyCode.Space))
-		{
-			Debug.LogWarning("fuck");
-			CheckForCollisionAndApplyForce();
-		}
-
 		if (IsInTriggerRange)
 		{
-			Debug.LogError(DifferenceInPosition); 
-			DifferenceInPosition =
-				_ballCollider.bounds.center - new Vector3(_collider.bounds.center.x, _collider.bounds.center.y, 0);
+			DifferenceInPosition = _ballCollider.bounds.center - new Vector3(_collider.bounds.center.x, _collider.bounds.center.y, 0);
 		}
+		
 		float targetVelocityX = input * moveSpeed;
 		Velocity.x = Mathf.SmoothDamp (Velocity.x, targetVelocityX, ref _velocityXSmoothing, accelerationTimeGrounded);
 		transform.position += Velocity;
 		
+		if (Input.GetKeyDown (KeyCode.Space))
+		{
+			if (_isTappingAvailable)
+			{
+				CheckForCollisionAndApplyForce();
+				StartCoroutine(ResetTapStatus());
+				_isTappingAvailable = false;
+			}
+		}
+	}
+
+	private IEnumerator ResetTapStatus()
+	{
+		yield return new WaitForSecondsRealtime(0.025f);
+		_isTappingAvailable = true;
 	}
 
 	private void CheckForCollisionAndApplyForce()
@@ -70,38 +79,59 @@ public class Player : MonoBehaviour {
 			if (DifferenceInPosition.y < 1f && DifferenceInPosition.y > 0.8f)
 			{
 				Debug.LogWarning("no");
-				_ball.GetComponent<Ball>().AddForce(DifferenceInPosition.x + 10f * Random.Range(-5, 5) * 10f,
-					DifferenceInPosition.y * 1000);
+				GoodHit();
 				return;
 			}
 			if (DifferenceInPosition.y < 0.8f && DifferenceInPosition.y > 0.4f)
 			{
 				Debug.LogWarning("Good");
-				_ball.GetComponent<Ball>()
-					.AddForce(DifferenceInPosition.x + Random.Range(-3f, 3f) * 10f, DifferenceInPosition.y * 2000);
+				GreatHit();
 				return;
 			}
-			if (DifferenceInPosition.y <= 0.4f && DifferenceInPosition.y > 0)
+			if (DifferenceInPosition.y <= 0.4f && DifferenceInPosition.y > 0f)
 			{
 				Debug.LogWarning("perfect");
-				_ball.GetComponent<Ball>().AddForce(DifferenceInPosition.x + Random.Range(-1.2f, 1.2f) * 10f,
-					DifferenceInPosition.y * 3000);
+				PerfectHit();
+			}
+			else
+			{
+				Missed();
 			}
 		}
 	}
-	
+
+	private void Missed()
+	{
+		Score.Instance.AddHitCount(Score.Hit.Missed);
+	}
+
+	private void GoodHit()
+	{
+		_ball.GetComponent<Ball>()
+			.AddForce(DifferenceInPosition.x + 0.05f * Random.Range(-5, 5) * 0.7f, 5 / DifferenceInPosition.y);
+		Score.Instance.AddHitCount(Score.Hit.Good);
+	}
+
+	private void GreatHit()
+	{
+		_ball.GetComponent<Ball>()
+			.AddForce(DifferenceInPosition.x + Random.Range(-3f, 3f) * 0.5f, 5 / DifferenceInPosition.y);
+		Score.Instance.AddHitCount(Score.Hit.Great);
+	}
+
+	private void PerfectHit()
+	{
+		_ball.GetComponent<Ball>().AddForce(DifferenceInPosition.x + Random.Range(-1.2f, 1.2f) * 2f,
+			5 / DifferenceInPosition.y);
+		Score.Instance.AddHitCount(Score.Hit.Perfect);
+	}
+
 	private void OnTriggerEnter2D(Collider2D other)
 	{
 		IsInTriggerRange = true;
 		_ball = other.gameObject;
 		_ballCollider = _ball.GetComponent<CircleCollider2D>();
 	}
-
-//	private void OnTriggerStay2D(Collider2D other)
-//	{
-//		DifferenceInPosition = _ballCollider.bounds.center - new Vector3(_collider.bounds.center.x,_collider.bounds.center.y,0);
-//		Debug.LogError("diff"+DifferenceInPosition);
-//	}
 
 	private void OnTriggerExit2D(Collider2D other)
 	{

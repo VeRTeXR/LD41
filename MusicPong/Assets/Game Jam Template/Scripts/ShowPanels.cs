@@ -7,7 +7,9 @@ public class ShowPanels : MonoBehaviour {
 	public GameObject OptionsTint;							//Store a reference to the Game Object OptionsTint 
 	public GameObject MenuPanel;							//Store a reference to the Game Object MenuPanel 
 	public GameObject PausePanel;							//Store a reference to the Game Object PausePanel 
-
+	public GameObject GameplayPanel;
+	public GameObject FinishPanel;
+	
 	public void ShowOptionsPanel()
 	{
 		OptionsPanel.SetActive(true);
@@ -28,6 +30,16 @@ public class ShowPanels : MonoBehaviour {
 	public void HideMenu()
 	{
 		MenuPanel.SetActive (false);
+	}
+
+	public void ShowGameplay()
+	{
+		GameplayPanel.SetActive(true);
+	}
+
+	public void HideGameplay()
+	{
+		GameplayPanel.SetActive(false);
 	}
 	
 	public void ShowPausePanel()

@@ -113,10 +113,10 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.Spa
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingRenderer
 a24dd7081e8a45d0af21564cf5241fb2 Assembly-CSharp.dll:.StartOptions
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Ball
-b5c7b1ce29b9ff5464fc42b40999fefc Assembly-CSharp.dll:.ShowPanels
+7dccd0a94ff2f986f82ac6987035cf14 Assembly-CSharp.dll:.ShowPanels
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.DontDestroy
 b067293ea19aeb17f231efaa7a823fa9 Assembly-CSharp.dll:.ScreenShake
-c60750c28a4dfa9d38f2c5a005450d1a Assembly-CSharp.dll:.Score
+d305ac9fc777fae0a4f832cc85133796 Assembly-CSharp.dll:.Score
 cfa2adad5b48d50b0a3520304737bded Assembly-CSharp.dll:.SetAudioLevels
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
@@ -142,6 +142,7 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingRenderer
 328a33aac2a9d13f0950e8ae21556093 Assembly-CSharp.dll:.StartMenuSelection
+56fba2a93e5c6d6b2f9d26ce41cfde9f Assembly-CSharp.dll:.BallSpawner
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SelectableMarkerCallback
 a31168e1072aa4f97d39c3fcd5890f08 Assembly-CSharp.dll:.Player
-56fba2a93e5c6d6b2f9d26ce41cfde9f Assembly-CSharp.dll:.BallSpawner
+1221c1ce1229764a8774189bed27b9cc Assembly-CSharp.dll:.BallManager

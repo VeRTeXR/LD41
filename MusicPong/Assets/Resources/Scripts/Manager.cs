@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class Manager : MonoBehaviour {
 	
-	public static Manager instance = null; 
+	public static Manager Instance = null; 
 	//private Manager managerScript;
 	public GameObject ExitTest;
 	public GameObject[] enemy;
@@ -30,10 +30,10 @@ public class Manager : MonoBehaviour {
 	void Start () {
 		
 		HP = 20;
-		if (instance == null) {
-			instance = this;
+		if (Instance == null) {
+			Instance = this;
 		}
-		else if (instance != this){
+		else if (Instance != this){
 			Destroy (gameObject);
 		}
 
@@ -79,7 +79,7 @@ if(GameObject.FindGameObjectWithTag("Player") == null)
         if (level < 1)
         {
             HP = 20;
-	        Score.instance.Reset(); //score = 0;
+	        Score.Instance.Reset(); //score = 0;
 	        //check score, health, reset it! 
         }
 		if (Input.GetKeyDown (KeyCode.Z)) {
@@ -94,7 +94,7 @@ if(GameObject.FindGameObjectWithTag("Player") == null)
 
 		if (Input.GetKeyDown(KeyCode.Q))
 		{
-			Score.instance.AddPoint(100);
+			Score.Instance.AddPoint(100);
 		}
 //        if (levelImage.activeSelf) {
 //			if (Input.GetKeyDown (KeyCode.R)) {
@@ -125,11 +125,18 @@ if(GameObject.FindGameObjectWithTag("Player") == null)
 
 	public void OutOfBound()
 	{
-//		instance.HP--;
-		Restart();
-//		throw new System.NotImplementedException();
+		Instance.HP--;
+		if (HP <= 0)
+			Restart();
+		else
+			ResetBall();
 	}
-	
+
+	private void ResetBall()
+	{
+		FindObjectOfType<BallSpawner>().ResetBall();
+	}
+
 	private void Restart () {
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}

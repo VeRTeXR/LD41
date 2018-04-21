@@ -39,11 +39,11 @@ public class StartMenuSelection : MonoBehaviour
 		{
 			if (ActiveButton() == 0)
 			{
-				Manager.instance.StartMenu.GetComponent<StartOptions>().StartButtonClicked();
+				Manager.Instance.StartMenu.GetComponent<StartOptions>().StartButtonClicked();
 			}
 			if (ActiveButton() == 1)
 			{
-				Manager.instance.StartMenu.GetComponent<QuitApplication>().Quit();
+				Manager.Instance.StartMenu.GetComponent<QuitApplication>().Quit();
 			}
 		}
 	}
