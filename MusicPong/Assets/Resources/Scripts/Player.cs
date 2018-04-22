@@ -136,6 +136,7 @@ public class Player : MonoBehaviour {
 		_ball.AddForce(DifferenceInPosition.x + Random.Range(-1.2f, 1.2f) * 2f,
 			7.5f / Mathf.Clamp(DifferenceInPosition.y,0.1f,100f));
 		StartCoroutine(AnimatePerfectHit());
+		gameObject.GetComponent<ScreenShake>().TriggerScreenShake();
 		Score.Instance.AddHitCount(Score.Hit.Perfect);
 	}
 

@@ -160,22 +160,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 54054177e29cd1b4b97ba556d5c58dfe, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &166626573 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1963307604742610, guid: 45616935e4fe10f48b62da1347801a16,
-    type: 2}
-  m_PrefabInternal: {fileID: 1254937854}
---- !u!225 &166626580
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 166626573}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &364719428 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1090609055409906, guid: 54054177e29cd1b4b97ba556d5c58dfe,
@@ -406,14 +390,14 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 22308868, guid: 45616935e4fe10f48b62da1347801a16, type: 2}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1114173920}
     - target: {fileID: 11432662, guid: 45616935e4fe10f48b62da1347801a16, type: 2}
       propertyPath: GameplayArea
       value: 
       objectReference: {fileID: 1906912690}
-    - target: {fileID: 1963307604742610, guid: 45616935e4fe10f48b62da1347801a16, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 22496010, guid: 45616935e4fe10f48b62da1347801a16, type: 2}
       propertyPath: m_AnchorMin.y
       value: 1
@@ -446,11 +430,6 @@ Prefab:
       propertyPath: m_AnchoredPosition.y
       value: -115
       objectReference: {fileID: 0}
-    - target: {fileID: 95255502109913108, guid: 45616935e4fe10f48b62da1347801a16,
-        type: 2}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 66cc5b31a6ed3c34198bf917886b262f, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 45616935e4fe10f48b62da1347801a16, type: 2}
   m_IsPrefabParent: 0

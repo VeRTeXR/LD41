@@ -72,6 +72,7 @@ GameObject:
   - component: {fileID: 114336796256015476}
   - component: {fileID: 61636231777454756}
   - component: {fileID: 82847994283996810}
+  - component: {fileID: 114160422891579562}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -282,6 +283,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114160422891579562
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1448871615343776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 721e7dd7e79644eb09bd30ab542a7ec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeAmt: 0.1
 --- !u!114 &114336796256015476
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -296,7 +309,6 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0, z: 0}
   Explosion: {fileID: 0}
   IsInTriggerRange: 0
-  BallPosition: {x: 0, y: 0}
   DifferenceInPosition: {x: 0, y: 0}
   HitEffect: {fileID: 0}
   HitAnimationClip: {fileID: 7400000, guid: a08baa376d9c344fdaa4cf3ee105f6d3, type: 2}

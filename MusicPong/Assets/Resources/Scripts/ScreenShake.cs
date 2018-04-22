@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+
 
 public class ScreenShake : MonoBehaviour 
 {
@@ -11,29 +11,13 @@ public class ScreenShake : MonoBehaviour
 
 	void Start () {
 		mainCamera = Camera.main;
+		originalCameraPosition = mainCamera.transform.localPosition;
 	}
-
-	void Update () {
-		originalCameraPosition = mainCamera.transform.position;
-	}
-
-	void OnTriggerEnter2D(Collider2D coll) 
+	
+	public void TriggerScreenShake()
 	{
-		if (coll.CompareTag ("enemyBullet")) {
-			InvokeRepeating ("CameraShake", 0, .15f);
-			Invoke ("StopShaking", 0.2f);
-		}
-	}
-
-	void OnCollisionEnter2D(Collision2D c) {
-		if (c.gameObject.tag == "enemyBullet") {
-			InvokeRepeating ("CameraShake", 0, .15f);
-			Invoke ("StopShaking", 0.2f);
-		}
-		if (c.gameObject.tag == "Enemy") {
-			InvokeRepeating ("CameraShake", 0, .15f);
-			Invoke ("StopShaking", 0.2f);
-		}
+		InvokeRepeating ("CameraShake", 0, .15f);
+		Invoke ("StopShaking", 0.2f);
 	}
 
 	void CameraShake()
@@ -41,17 +25,17 @@ public class ScreenShake : MonoBehaviour
 		if(shakeAmt>0) 
 		{
 			float quakeAmt = shakeAmt*2 - shakeAmt;
-			Vector3 pp = mainCamera.transform.position;
+			Vector3 pp = mainCamera.transform.localPosition;
 			pp.x+= quakeAmt;
 			pp.y+= quakeAmt/2;// can also add to x and/or z
-			mainCamera.transform.position = pp;
+			mainCamera.transform.localPosition = pp;
 		}
 	}
 	
 	void StopShaking()
 	{
 		CancelInvoke("CameraShake");
-		mainCamera.transform.position = originalCameraPosition;
+		mainCamera.transform.localPosition = originalCameraPosition;
 	}
 	
 }

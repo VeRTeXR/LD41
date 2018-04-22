@@ -14,7 +14,6 @@ public class BallSpawner : MonoBehaviour
 		{
 			Ball = Instantiate(BallOriginal);
 			Ball.transform.position = transform.position;
-			Debug.LogError(Manager.Instance.GameplayArea);
 			Ball.transform.parent = Manager.Instance.GameplayArea.transform;
 		}
 		else
