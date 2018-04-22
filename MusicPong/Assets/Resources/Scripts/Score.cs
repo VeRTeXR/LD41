@@ -18,8 +18,9 @@ public class Score : MonoBehaviour{
 	public int Missed;
 	private string highScoreKey = "highScore";
 	private string playerName = "playerName";
+	private bool isAnimatingScoreText;
 
-	private Vector3 HitTextFinalSize = new Vector3(0.6f, 0.6f,0.6f);
+	private Vector3 HitTextFinalSize = new Vector3(0.8f, 0.8f,0.8f);
 	
 	public enum Hit
 	{
@@ -49,6 +50,17 @@ public class Score : MonoBehaviour{
 		// Display both the Score and High Score
 		if (ScoreGuiText == null) return;
 		ScoreGuiText.text = _score.ToString ();
+
+		if (isAnimatingScoreText)
+		{
+			HitGuiText.transform.localScale = Vector3.Lerp(HitGuiText.transform.localScale, HitTextFinalSize, Time.deltaTime*3);
+			if (HitGuiText.transform.localScale == HitTextFinalSize)
+			{
+				HitGuiText.transform.localScale = Vector3.zero;
+				isAnimatingScoreText = false;
+			}
+		}
+
 	}
 
 	private void Initialise () {
@@ -62,19 +74,19 @@ public class Score : MonoBehaviour{
 		{
 			PerfectHit++;
 			AddPoint(3);
-			StartCoroutine(ShowHitGuiText(Hit.Perfect,30));
+			ShowHitGuiText(Hit.Perfect);
 		}
 		else if (hitType == Hit.Great)
 		{
 			GreatHit++;
 			AddPoint(2);
-			StartCoroutine(ShowHitGuiText(Hit.Great,30));
+			ShowHitGuiText(Hit.Great);
 		} 
 		else if (hitType == Hit.Good)
 		{
 			GoodHit++;
 			AddPoint(1);
-			StartCoroutine(ShowHitGuiText(Hit.Good,30));
+			ShowHitGuiText(Hit.Good);
 		} 
 		else if (hitType == Hit.Missed)
 		{
@@ -82,17 +94,12 @@ public class Score : MonoBehaviour{
 		}
 	}
 
-	private IEnumerator ShowHitGuiText(Hit type, float animDuration)
+	private void ShowHitGuiText(Hit type)
 	{
-		var duration = 0f;
+		
 		HitGuiText.transform.localScale = Vector3.zero;
-		while (duration < animDuration)
-		{
-			HitGuiText.transform.localScale = Vector3.Lerp(Vector3.zero, HitTextFinalSize, duration*0.2f);
-			duration += Time.deltaTime;
-		}
 		HitGuiText.text = type.ToString();
-		yield return null;
+		isAnimatingScoreText = true;
 
 	}
 

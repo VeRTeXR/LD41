@@ -18,6 +18,7 @@ public class Ball : MonoBehaviour
 
 	public void AddForce(float forceX, float forceY)
 	{
+		_rigidbody2D.velocity = Vector2.zero;
 		Debug.LogWarning("force y : "+forceY);
 		_rigidbody2D.AddRelativeForce(new Vector2(forceX, Mathf.Clamp(forceY,0, 15f)),ForceMode2D.Impulse);
 	}

@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4000014186874742}
   - component: {fileID: 114000014243493402}
-  - component: {fileID: 114299075568634060}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -52,10 +51,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15e707449e8b94549b1ba4b98e572a69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExitTest: {fileID: 1000011510942230, guid: 4a00679222b754b989f0de2358084a87, type: 2}
+  ExitTest: {fileID: 0}
   enemy: []
-  player: {fileID: 1000012229636426, guid: a11596b73b5c2418bac18485b0a610f3, type: 2}
-  spawn: {fileID: 1000011110323586, guid: 96be3ea4602f24f11937c72add451d73, type: 2}
+  player: {fileID: 1725667958494420, guid: 1b100ebfbd0374ea5a8ea0a4ed87924d, type: 2}
+  spawn: {fileID: 0}
   levelStartDelay: 0.3
   levelStartCountdown: 0
   HP: 20
@@ -63,18 +62,3 @@ MonoBehaviour:
   StartMenu: {fileID: 0}
   ScoreManager: {fileID: 0}
   PauseScript: {fileID: 0}
---- !u!114 &114299075568634060
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010454891952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a478ee48cdf884cb090f8984670cac5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scoreGUIText: {fileID: 0}
-  highScoreGUIText: {fileID: 0}
-  GUIhighScore: 0
-  name: 

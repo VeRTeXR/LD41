@@ -20,5 +20,7 @@ public class BallSpawner : MonoBehaviour
 	public void ResetBall()
 	{
 		Ball.transform.position = transform.position;
+		Ball.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+		Ball.GetComponent<Rigidbody2D>().angularVelocity = 0;
 	}
 }

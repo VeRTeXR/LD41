@@ -23,6 +23,7 @@ public class Player : MonoBehaviour {
 	public Vector2 BallPosition;
 	public Vector2 DifferenceInPosition;
 	private GameObject _ball;
+	public GameObject HitEffect;
 	
 	
 	Animator _animator;
@@ -36,6 +37,11 @@ public class Player : MonoBehaviour {
 		_ball = null;
 		_ballCollider = null;
 		_collider = GetComponent<BoxCollider2D>();
+		if (HitEffect == null)
+		{
+			HitEffect = Instantiate(Resources.Load("Prefabs/HitEffect") as GameObject);
+			HitEffect.SetActive(false);
+		}
 	}
 
 	private void FixedUpdate()
@@ -74,21 +80,22 @@ public class Player : MonoBehaviour {
 
 	private void CheckForCollisionAndApplyForce()
 	{
+		
 		if (IsInTriggerRange)
 		{
-			if (DifferenceInPosition.y < 1f && DifferenceInPosition.y > 0.8f)
+			if (DifferenceInPosition.y < 2f && DifferenceInPosition.y > 1f)
 			{
 				Debug.LogWarning("no");
 				GoodHit();
 				return;
 			}
-			if (DifferenceInPosition.y < 0.8f && DifferenceInPosition.y > 0.4f)
+			if (DifferenceInPosition.y < 1f && DifferenceInPosition.y > 0.5f)
 			{
 				Debug.LogWarning("Good");
 				GreatHit();
 				return;
 			}
-			if (DifferenceInPosition.y <= 0.4f && DifferenceInPosition.y > 0f)
+			if (DifferenceInPosition.y <= 0.5f && DifferenceInPosition.y > -0.5f)
 			{
 				Debug.LogWarning("perfect");
 				PerfectHit();
@@ -97,6 +104,7 @@ public class Player : MonoBehaviour {
 			{
 				Missed();
 			}
+			transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
 		}
 	}
 
@@ -108,22 +116,58 @@ public class Player : MonoBehaviour {
 	private void GoodHit()
 	{
 		_ball.GetComponent<Ball>()
-			.AddForce(DifferenceInPosition.x + 0.05f * Random.Range(-5, 5) * 0.7f, 5 / DifferenceInPosition.y);
+			.AddForce(DifferenceInPosition.x + 0.05f * Random.Range(-5, 5) * 0.7f, 7.5f / DifferenceInPosition.y);
 		Score.Instance.AddHitCount(Score.Hit.Good);
 	}
 
 	private void GreatHit()
 	{
 		_ball.GetComponent<Ball>()
-			.AddForce(DifferenceInPosition.x + Random.Range(-3f, 3f) * 0.5f, 5 / DifferenceInPosition.y);
+			.AddForce(DifferenceInPosition.x + Random.Range(-3f, 3f) * 0.5f, 7.5f / DifferenceInPosition.y);
 		Score.Instance.AddHitCount(Score.Hit.Great);
+		AnimateGreatHit();
 	}
 
 	private void PerfectHit()
 	{
+		
+		Debug.LogError(DifferenceInPosition.y);
 		_ball.GetComponent<Ball>().AddForce(DifferenceInPosition.x + Random.Range(-1.2f, 1.2f) * 2f,
-			5 / DifferenceInPosition.y);
+			7.5f / Mathf.Clamp(DifferenceInPosition.y,0.1f,100f));
+		AnimatePerfectHit();
 		Score.Instance.AddHitCount(Score.Hit.Perfect);
+	}
+
+	private void AnimatePerfectHit()
+	{
+		HitEffect.transform.position = transform.localPosition;
+		HitEffect.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+		HitEffect.SetActive(true);
+		HitEffect.GetComponent<Animator>().SetTrigger("Perfect");
+		StartCoroutine(DisableHitEffectAfterAnimationPlayed());
+	}
+	
+	private void AnimateGreatHit()
+	{
+		HitEffect.transform.position = transform.localPosition;
+		HitEffect.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+		HitEffect.SetActive(true);
+		HitEffect.GetComponent<Animator>().SetTrigger("Great");
+		StartCoroutine(DisableHitEffectAfterAnimationPlayed());
+	}
+
+	private IEnumerator DisableHitEffectAfterAnimationPlayed()
+	{
+		yield return new WaitForSecondsRealtime(0.45f);
+		HitEffect.GetComponent<Animator>().ResetTrigger("Great");
+		HitEffect.GetComponent<Animator>().ResetTrigger("Perfect");
+		HitEffect.SetActive(false);
+	}
+
+	private IEnumerator ResetHitAnimation()
+	{
+		yield return  new WaitForSecondsRealtime(0.2f);
+		transform.GetChild(0).GetComponent<Animator>().ResetTrigger("Hit");
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -138,6 +182,12 @@ public class Player : MonoBehaviour {
 		IsInTriggerRange = false;
 		DifferenceInPosition = Vector2.zero;
 		_ball = null;
+	}
+
+	private void OnDrawGizmos()
+	{
+		Gizmos.color = Color.red;
+		Gizmos.DrawLine(new Vector3( DifferenceInPosition.x-1, DifferenceInPosition.y+transform.localPosition.y, 0), new Vector3(DifferenceInPosition.x+1, DifferenceInPosition.y+transform.localPosition.y,0));
 	}
 
 	private void Restart () {
