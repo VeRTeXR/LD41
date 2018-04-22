@@ -8,8 +8,8 @@ public class Manager : MonoBehaviour {
 	
 	public static Manager Instance = null; 
 	//private Manager managerScript;
-	public GameObject ExitTest;
-	public GameObject[] enemy;
+//	public GameObject ExitTest;
+//	public GameObject[] enemy;
 	public GameObject player;
 	public GameObject spawn;
 	//public GameObject ExitTest;
@@ -28,8 +28,8 @@ public class Manager : MonoBehaviour {
 
 	// Title
 
-	void Start () {
-		
+	void Start ()
+	{
 		HP = 3;
 		if (Instance == null) {
 			Instance = this;

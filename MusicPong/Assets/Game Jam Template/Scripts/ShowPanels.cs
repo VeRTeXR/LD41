@@ -36,12 +36,14 @@ public class ShowPanels : MonoBehaviour {
 
 	public void ShowGameplay()
 	{
+		Cursor.visible = false;
 		GameplayPanel.SetActive(true);
 		ShowGameplayArea();
 	}
 
 	public void HideGameplay()
 	{
+		Cursor.visible = true;
 		GameplayPanel.SetActive(false);
 		HideGameplayArea();
 	}

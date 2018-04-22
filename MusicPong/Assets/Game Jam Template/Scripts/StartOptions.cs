@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class StartOptions : MonoBehaviour {
@@ -32,14 +33,6 @@ public class StartOptions : MonoBehaviour {
 		PauseScript.DoPause();
 	}
 
-	public void SetPlayerState(bool isEnabled)
-	{
-//		if (_player != null)
-//		{
-//			_player.gameObject.GetComponent<Player>().enabled = isEnabled;
-//			_player.gameObject.GetComponent<Controller2D>().enabled = isEnabled;
-//		}
-	}
 
 	private void SetUnscaleUiAnimatorUpdateMode()
 	{
@@ -51,7 +44,6 @@ public class StartOptions : MonoBehaviour {
 	public void StartButtonClicked()
 	{
 		FadeOutMusicOnStartIfAppropriate();
-		SetPlayerState(true);
 		StartGameInScene();
 	}
 
@@ -71,6 +63,14 @@ public class StartOptions : MonoBehaviour {
 		AnimMenuAlpha.ResetTrigger("fade");
 	}
 
+	public IEnumerator HideGameplay()
+	{
+		yield return new WaitForSecondsRealtime(FadeAlphaAnimationClip.length);
+		_showPanels.HideGameplay();
+		GameplayMenuAlpha.ResetTrigger("fade");
+		_showPanels.ShowFinishPanel(); 
+	}
+	
 	public void StartGameInScene()
 	{
 		InMainMenu = false;
@@ -83,26 +83,24 @@ public class StartOptions : MonoBehaviour {
 
 	public void GameOver()
 	{
-//		GameplayMenuAlpha.SetTrigger("fade");
-		_showPanels.HideGameplay();
-		StartCoroutine("HideDelayed");
-		_showPanels.ShowFinishPanel(); 
+		GameplayMenuAlpha.SetTrigger("fade");
+		StartCoroutine("HideGameplay");
+		
 	}
 
 	public void Retry()
 	{
+		_showPanels.GameplayPanel.GetComponent<CanvasGroup>().alpha = 1;
 		StartGameInScene();
 		Manager.Instance.RetryResetBall();
 		Score.Instance.Reset();
 		Manager.Instance.Retry();
 		_showPanels.HideFinishPanel(); 
-		
-		
 	}
 	
 	private void FadeAndDisableMenuPanel()
 	{
-//		AnimMenuAlpha.SetTrigger("fade");
+		AnimMenuAlpha.SetTrigger("fade");
 		StartCoroutine("HideDelayed");
 	}
 

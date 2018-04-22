@@ -13,8 +13,6 @@ public class Player : MonoBehaviour {
 	private float _buttoncooldown = 0.5f;
 	private int _buttoncount = 0;
 	private float _playerHp;
-	private float _playerMaxEnegy;
-	private float _playerCurrentEnegy;
 	private float _boosterCost;
 	private float _rechargeRate;
 
@@ -22,9 +20,8 @@ public class Player : MonoBehaviour {
 	private float _velocityXSmoothing;
 	public GameObject Explosion;
 	public bool IsInTriggerRange;
-	public Vector2 BallPosition;
 	public Vector2 DifferenceInPosition;
-	private GameObject _ball;
+	private Ball _ball;
 	public GameObject HitEffect;
 	public AnimationClip HitAnimationClip;
 	private AudioSource _thisAudio; //TODO:: refactor this later
@@ -38,9 +35,6 @@ public class Player : MonoBehaviour {
 	
 	void Start()
 	{
-		_playerCurrentEnegy = _playerMaxEnegy;
-		_ball = null;
-		_ballCollider = null;
 		_thisAudio = GetComponent<AudioSource>();
 		_collider = GetComponent<BoxCollider2D>();
 		if (HitEffect == null)
@@ -50,22 +44,26 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	private void FixedUpdate()
+	private void Update()
 	{
 		var input = Input.GetAxisRaw("Horizontal");
+		float targetVelocityX = input * moveSpeed;
+		Velocity.x = Mathf.SmoothDamp (Velocity.x, targetVelocityX, ref _velocityXSmoothing, accelerationTimeGrounded);
+		transform.position += Velocity;
+	}
+	
+	private void FixedUpdate()
+	{
 		if (IsInTriggerRange)
 		{
 			DifferenceInPosition = _ballCollider.bounds.center - new Vector3(_collider.bounds.center.x, _collider.bounds.center.y, 0);
 		}
-		
-		float targetVelocityX = input * moveSpeed;
-		Velocity.x = Mathf.SmoothDamp (Velocity.x, targetVelocityX, ref _velocityXSmoothing, accelerationTimeGrounded);
-		transform.position += Velocity;
-		
-		if (Input.GetKeyDown (KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+
+		if (Input.GetKeyDown (KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
 		{
 			if (_isTappingAvailable)
 			{
+				transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
 				CheckForCollisionAndApplyForce();
 				StartCoroutine(ResetTapStatus());
 				_isTappingAvailable = false;
@@ -75,53 +73,43 @@ public class Player : MonoBehaviour {
 
 	private IEnumerator ResetTapStatus()
 	{
-		yield return new WaitForSecondsRealtime(0.025f);
+		yield return new WaitForSecondsRealtime(0.0025f);
 		_isTappingAvailable = true;
 	}
 
 	private void CheckForCollisionAndApplyForce()
 	{
-		
-		if (IsInTriggerRange)
+		if (DifferenceInPosition.y < 2f && DifferenceInPosition.y > 1f)
 		{
-			if (DifferenceInPosition.y < 2f && DifferenceInPosition.y > 1f)
-			{
-				GoodHit();
-				transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
-				StartCoroutine(EnableHitIndicatorAfterAnimation());
-				_thisAudio.PlayOneShot(HitSound);
-				return;
-			}
-			if (DifferenceInPosition.y < 1f && DifferenceInPosition.y > 0.5f)
-			{
-				
-				GreatHit();
-				transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
-				StartCoroutine(EnableHitIndicatorAfterAnimation());
-				_thisAudio.PlayOneShot(HitSound);
-				return;
-			}
-			if (DifferenceInPosition.y <= 0.5f && DifferenceInPosition.y > -0.5f)
-			{
-				PerfectHit();
-				transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
-				StartCoroutine(EnableHitIndicatorAfterAnimation());
-				_thisAudio.PlayOneShot(HitSound);
-			}
-			else
-			{
-				Missed();
-			}
-			
-			transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
-			
+			GoodHit();
+			StartCoroutine(EnableHitIndicatorAfterAnimation());
+			_thisAudio.PlayOneShot(HitSound);
+			return;
 		}
+		if (DifferenceInPosition.y < 1f && DifferenceInPosition.y > 0.5f)
+		{
+			GreatHit();
+			StartCoroutine(EnableHitIndicatorAfterAnimation());
+			_thisAudio.PlayOneShot(HitSound);
+			return;
+		}
+		if (DifferenceInPosition.y <= 0.5f && DifferenceInPosition.y > -0.5f)
+		{
+			PerfectHit();
+			StartCoroutine(EnableHitIndicatorAfterAnimation());
+			_thisAudio.PlayOneShot(HitSound);
+		}
+		else
+		{
+			Missed();
+		}
+		
 	}
 
 	private IEnumerator EnableHitIndicatorAfterAnimation()
 	{
-		yield return new WaitForSecondsRealtime(HitAnimationClip.length-0.01f);
 		transform.GetChild(2).gameObject.SetActive(true);
+		yield return new WaitForSecondsRealtime(HitAnimationClip.length-0.01f);
 		StartCoroutine(DisableHitIndicatorAfterCooldown());
 	}
 
@@ -132,30 +120,28 @@ public class Player : MonoBehaviour {
 
 	private void GoodHit()
 	{
-		_ball.GetComponent<Ball>()
-			.AddForce(DifferenceInPosition.x + 0.05f * Random.Range(-5, 5) * 0.7f, 7.5f / DifferenceInPosition.y);
+		_ball.AddForce(DifferenceInPosition.x + 0.05f * Random.Range(-5, 5) * 0.7f, 7.5f / DifferenceInPosition.y);
 		Score.Instance.AddHitCount(Score.Hit.Good);
 	}
 
 	private void GreatHit()
 	{
-		_ball.GetComponent<Ball>()
-			.AddForce(DifferenceInPosition.x + Random.Range(-3f, 3f) * 0.5f, 7.5f / DifferenceInPosition.y);
+		_ball.AddForce(DifferenceInPosition.x + Random.Range(-3f, 3f) * 0.5f, 7.5f / DifferenceInPosition.y);
 		Score.Instance.AddHitCount(Score.Hit.Great);
-		AnimateGreatHit();
+		StartCoroutine(AnimateGreatHit());
 	}
 
 	private void PerfectHit()
 	{
-		
-		_ball.GetComponent<Ball>().AddForce(DifferenceInPosition.x + Random.Range(-1.2f, 1.2f) * 2f,
+		_ball.AddForce(DifferenceInPosition.x + Random.Range(-1.2f, 1.2f) * 2f,
 			7.5f / Mathf.Clamp(DifferenceInPosition.y,0.1f,100f));
-		AnimatePerfectHit();
+		StartCoroutine(AnimatePerfectHit());
 		Score.Instance.AddHitCount(Score.Hit.Perfect);
 	}
 
-	private void AnimatePerfectHit()
+	private IEnumerator AnimatePerfectHit()
 	{
+		yield return new WaitForSecondsRealtime(HitAnimationClip.length-0.1f);
 		HitEffect.transform.position = transform.position + new Vector3(0, 0.45f,0 );
 		HitEffect.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
 		HitEffect.SetActive(true);
@@ -163,8 +149,9 @@ public class Player : MonoBehaviour {
 		StartCoroutine(DisableHitEffectAfterAnimationPlayed());
 	}
 	
-	private void AnimateGreatHit()
+	private IEnumerator AnimateGreatHit()
 	{
+		yield return new WaitForSecondsRealtime(HitAnimationClip.length-0.1f);
 		HitEffect.transform.position = transform.position;
 		HitEffect.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
 		HitEffect.SetActive(true);
@@ -182,7 +169,7 @@ public class Player : MonoBehaviour {
 
 	private IEnumerator DisableHitIndicatorAfterCooldown()
 	{
-		yield return new WaitForSecondsRealtime(0.05f);
+		yield return new WaitForSecondsRealtime(0.025f);
 		transform.GetChild(2).gameObject.SetActive(false);
 	}
 
@@ -194,9 +181,16 @@ public class Player : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
+		if (_ball == null)
+			_ball = other.GetComponent<Ball>();
+		if(_ballCollider == null)
+			_ballCollider = _ball.GetComponent<CircleCollider2D>();
 		IsInTriggerRange = true;
-		_ball = other.gameObject;
-		_ballCollider = _ball.GetComponent<CircleCollider2D>();
+	}
+
+	private void OnTriggerStay2D(Collider2D other)
+	{
+		Debug.LogError(_ball);
 	}
 
 	private void OnTriggerExit2D(Collider2D other)

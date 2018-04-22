@@ -56,7 +56,7 @@ public class Score : MonoBehaviour{
 		if (_isAnimatingScoreText)
 		{
 			HitGuiText.transform.localScale = Vector3.Lerp(HitGuiText.transform.localScale, HitTextFinalSize, Time.deltaTime*3);
-			if (HitGuiText.transform.localScale == HitTextFinalSize)
+			if (HitGuiText.transform.localScale.x >= 0.6f)
 			{
 				HitGuiText.transform.localScale = Vector3.zero;
 				_isAnimatingScoreText = false;
@@ -65,8 +65,7 @@ public class Score : MonoBehaviour{
 
 	}
 
-	private void Initialise () 
-	{
+	private void Initialise () {
 		_highScore = PlayerPrefs.GetInt (highScoreKey, 0);
 	}
 
