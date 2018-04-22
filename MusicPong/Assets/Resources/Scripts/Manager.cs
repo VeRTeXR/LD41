@@ -57,7 +57,7 @@ public class Manager : MonoBehaviour {
 	{
 		player = GameObject.FindGameObjectWithTag("Player");
 		spawn = GameObject.FindGameObjectWithTag("Spawn");
-		if (GameObject.FindGameObjectWithTag("Player") == null)
+		if (player == null)
 		{
 			var p = Instantiate(Resources.Load("Prefabs/Player") as GameObject, spawn.transform.position, spawn.transform.rotation);
 			p.transform.parent = GameplayArea.transform;
@@ -68,20 +68,9 @@ public class Manager : MonoBehaviour {
 	}
 
 	void Update () {
-        if (level < 1)
-        {
-            HP = 20;
-	        Score.Instance.Reset(); //score = 0;
-	        //check score, health, reset it! 
-        }
-		if (Input.GetKeyDown (KeyCode.Z)) {
+		if (Input.GetKeyDown(KeyCode.Z))
+		{
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-			//Application.LoadLevel("StartScn");
-			//level = -1;
-			//score = 0;
-			//HP = 20;
-			//Debug.Log(level);
-			//	reload will actually reload from beginning
 		}
 	}
 
@@ -95,6 +84,7 @@ public class Manager : MonoBehaviour {
 		//display node diagram of story
 		//level survived?
 		//
+		Destroy(GameObject.FindGameObjectWithTag("Ball"));
 		StartMenu.GetComponent<StartOptions>().GameOver();
 		FindObjectOfType<Score> ().Save ();
 //		levelText.text = "You survived " + level + " levels";
@@ -103,19 +93,24 @@ public class Manager : MonoBehaviour {
 
 	public void Retry()
 	{
-		Instance.HP = 4;
+		Instance.HP = 3;
 		InitGame();
+		ResetHpIndicator();
 	}
 
-	public void OutOfBound()
+	private void ResetHpIndicator()
 	{
-		Debug.LogError(Instance.HP);
 		var HpObject = GameObject.FindWithTag("Hp");
 		if (Instance.HP >= 3)
 		{
 			for (var i = 0; i < HpObject.transform.childCount; i++)
 				HpObject.transform.GetChild(i).GetComponent<Image>().color = Color.white;
 		}
+	}
+
+	public void OutOfBound()
+	{
+		var HpObject = GameObject.FindWithTag("Hp");
 		Instance.HP--;
 		for (var i = 0; i < HpObject.transform.childCount; i++)
 		{
@@ -130,11 +125,15 @@ public class Manager : MonoBehaviour {
 			ResetBall();
 	}
 
-	private void ResetBall()
+	public void ResetBall()
 	{
 		FindObjectOfType<BallSpawner>().ResetBall();
 	}
 
+	public void RetryResetBall()
+	{
+		FindObjectOfType<BallSpawner>().RetryRespawnBall();
+	}
 	public void Restart () {
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}

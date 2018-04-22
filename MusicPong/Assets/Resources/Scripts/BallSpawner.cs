@@ -5,17 +5,31 @@ using UnityEngine;
 public class BallSpawner : MonoBehaviour
 {
 	public GameObject Ball;
-
+	public GameObject BallOriginal;
 	void Start ()
 	{
+		BallOriginal = Resources.Load("Prefabs/Ball") as GameObject;
+		Ball = GameObject.FindGameObjectWithTag("Ball");
 		if (Ball == null)
 		{
-			Ball = Instantiate(Resources.Load("Prefabs/Ball") as GameObject);
+			Ball = Instantiate(BallOriginal);
 			Ball.transform.position = transform.position;
+			Debug.LogError(Manager.Instance.GameplayArea);
 			Ball.transform.parent = Manager.Instance.GameplayArea.transform;
 		}
 		else
 			Ball.transform.position = transform.position;
+	}
+
+	public void RetryRespawnBall()
+	{
+		if (Ball == null)
+		{
+			Ball = Instantiate(BallOriginal);
+			Ball.transform.position = transform.position;
+			Debug.LogError(Manager.Instance.GameplayArea);
+			Ball.transform.parent = Manager.Instance.GameplayArea.transform;
+		}
 	}
 
 	public void ResetBall()

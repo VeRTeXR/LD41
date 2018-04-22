@@ -28,9 +28,6 @@ public class StartOptions : MonoBehaviour {
 		_showPanels = GetComponent<ShowPanels>();
 		PauseScript = GetComponent<Pause>();
 		_playMusic = GetComponent<PlayMusic>();
-		_player = GameObject.FindGameObjectWithTag("Player");
-
-		SetPlayerState(false);
 		SetUnscaleUiAnimatorUpdateMode();
 		PauseScript.DoPause();
 	}
@@ -86,7 +83,7 @@ public class StartOptions : MonoBehaviour {
 
 	public void GameOver()
 	{
-		GameplayMenuAlpha.SetTrigger("fade");
+//		GameplayMenuAlpha.SetTrigger("fade");
 		_showPanels.HideGameplay();
 		StartCoroutine("HideDelayed");
 		_showPanels.ShowFinishPanel(); 
@@ -94,19 +91,19 @@ public class StartOptions : MonoBehaviour {
 
 	public void Retry()
 	{
-		_showPanels.ShowGameplay();
+		StartGameInScene();
+		Manager.Instance.RetryResetBall();
 		Score.Instance.Reset();
 		Manager.Instance.Retry();
 		_showPanels.HideFinishPanel(); 
 		
-		StartGameInScene();
+		
 	}
 	
 	private void FadeAndDisableMenuPanel()
 	{
-		AnimMenuAlpha.SetTrigger("fade");
+//		AnimMenuAlpha.SetTrigger("fade");
 		StartCoroutine("HideDelayed");
-		
 	}
 
 	private void ChangeMusicOnStartIfAppropriate()

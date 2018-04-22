@@ -65,9 +65,9 @@ public class Score : MonoBehaviour{
 
 	}
 
-	private void Initialise () {
+	private void Initialise () 
+	{
 		_highScore = PlayerPrefs.GetInt (highScoreKey, 0);
-		Debug.Log (_highScore);
 	}
 
 	public void AddHitCount(Hit hitType)
@@ -98,7 +98,6 @@ public class Score : MonoBehaviour{
 
 	public int GetTotalScore()
 	{
-		Debug.LogError("returnScore");
 		return _score;
 	}
 
@@ -114,7 +113,6 @@ public class Score : MonoBehaviour{
 	public void AddPoint(int point)
 	{
 		_score = _score + point;
-		Debug.LogError(_score);
 	}
 
 	public void Save() {

@@ -42,7 +42,6 @@ public class Player : MonoBehaviour {
 		_ball = null;
 		_ballCollider = null;
 		_thisAudio = GetComponent<AudioSource>();
-		Debug.LogError(_thisAudio);
 		_collider = GetComponent<BoxCollider2D>();
 		if (HitEffect == null)
 		{
@@ -157,8 +156,7 @@ public class Player : MonoBehaviour {
 
 	private void AnimatePerfectHit()
 	{
-		Debug.LogError("perfect");
-		HitEffect.transform.position = transform.localPosition + new Vector3(0, 0.45f,0 );
+		HitEffect.transform.position = transform.position + new Vector3(0, 0.45f,0 );
 		HitEffect.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
 		HitEffect.SetActive(true);
 		HitEffect.GetComponent<Animator>().SetTrigger("Perfect");
@@ -167,7 +165,7 @@ public class Player : MonoBehaviour {
 	
 	private void AnimateGreatHit()
 	{
-		HitEffect.transform.position = transform.localPosition;
+		HitEffect.transform.position = transform.position;
 		HitEffect.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
 		HitEffect.SetActive(true);
 		HitEffect.GetComponent<Animator>().SetTrigger("Great");
@@ -180,8 +178,6 @@ public class Player : MonoBehaviour {
 		HitEffect.GetComponent<Animator>().ResetTrigger("Great");
 		HitEffect.GetComponent<Animator>().ResetTrigger("Perfect");
 		HitEffect.SetActive(false);
-		Debug.LogError("disabled" +
-		               "");
 	}
 
 	private IEnumerator DisableHitIndicatorAfterCooldown()
