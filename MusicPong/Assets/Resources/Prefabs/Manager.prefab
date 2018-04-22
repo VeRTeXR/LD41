@@ -53,7 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExitTest: {fileID: 0}
   enemy: []
-  player: {fileID: 1725667958494420, guid: 1b100ebfbd0374ea5a8ea0a4ed87924d, type: 2}
+  player: {fileID: 1448871615343776, guid: 1b100ebfbd0374ea5a8ea0a4ed87924d, type: 2}
   spawn: {fileID: 0}
   levelStartDelay: 0.3
   levelStartCountdown: 0
@@ -61,4 +61,5 @@ MonoBehaviour:
   level: 1
   StartMenu: {fileID: 0}
   ScoreManager: {fileID: 0}
+  GameplayArea: {fileID: 0}
   PauseScript: {fileID: 0}

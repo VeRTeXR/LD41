@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.Experimental.UIElements;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
@@ -24,6 +26,9 @@ public class Player : MonoBehaviour {
 	public Vector2 DifferenceInPosition;
 	private GameObject _ball;
 	public GameObject HitEffect;
+	public AnimationClip HitAnimationClip;
+	private AudioSource _thisAudio; //TODO:: refactor this later
+	public AudioClip HitSound;
 	
 	
 	Animator _animator;
@@ -36,6 +41,8 @@ public class Player : MonoBehaviour {
 		_playerCurrentEnegy = _playerMaxEnegy;
 		_ball = null;
 		_ballCollider = null;
+		_thisAudio = GetComponent<AudioSource>();
+		Debug.LogError(_thisAudio);
 		_collider = GetComponent<BoxCollider2D>();
 		if (HitEffect == null)
 		{
@@ -47,11 +54,6 @@ public class Player : MonoBehaviour {
 	private void FixedUpdate()
 	{
 		var input = Input.GetAxisRaw("Horizontal");
-
-		if (Input.GetKeyDown (KeyCode.Z)) {
-			Restart();
-		}
-
 		if (IsInTriggerRange)
 		{
 			DifferenceInPosition = _ballCollider.bounds.center - new Vector3(_collider.bounds.center.x, _collider.bounds.center.y, 0);
@@ -61,7 +63,7 @@ public class Player : MonoBehaviour {
 		Velocity.x = Mathf.SmoothDamp (Velocity.x, targetVelocityX, ref _velocityXSmoothing, accelerationTimeGrounded);
 		transform.position += Velocity;
 		
-		if (Input.GetKeyDown (KeyCode.Space))
+		if (Input.GetKeyDown (KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
 		{
 			if (_isTappingAvailable)
 			{
@@ -85,27 +87,43 @@ public class Player : MonoBehaviour {
 		{
 			if (DifferenceInPosition.y < 2f && DifferenceInPosition.y > 1f)
 			{
-				Debug.LogWarning("no");
 				GoodHit();
+				transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
+				StartCoroutine(EnableHitIndicatorAfterAnimation());
+				_thisAudio.PlayOneShot(HitSound);
 				return;
 			}
 			if (DifferenceInPosition.y < 1f && DifferenceInPosition.y > 0.5f)
 			{
-				Debug.LogWarning("Good");
+				
 				GreatHit();
+				transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
+				StartCoroutine(EnableHitIndicatorAfterAnimation());
+				_thisAudio.PlayOneShot(HitSound);
 				return;
 			}
 			if (DifferenceInPosition.y <= 0.5f && DifferenceInPosition.y > -0.5f)
 			{
-				Debug.LogWarning("perfect");
 				PerfectHit();
+				transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
+				StartCoroutine(EnableHitIndicatorAfterAnimation());
+				_thisAudio.PlayOneShot(HitSound);
 			}
 			else
 			{
 				Missed();
 			}
+			
 			transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
+			
 		}
+	}
+
+	private IEnumerator EnableHitIndicatorAfterAnimation()
+	{
+		yield return new WaitForSecondsRealtime(HitAnimationClip.length-0.01f);
+		transform.GetChild(2).gameObject.SetActive(true);
+		StartCoroutine(DisableHitIndicatorAfterCooldown());
 	}
 
 	private void Missed()
@@ -131,7 +149,6 @@ public class Player : MonoBehaviour {
 	private void PerfectHit()
 	{
 		
-		Debug.LogError(DifferenceInPosition.y);
 		_ball.GetComponent<Ball>().AddForce(DifferenceInPosition.x + Random.Range(-1.2f, 1.2f) * 2f,
 			7.5f / Mathf.Clamp(DifferenceInPosition.y,0.1f,100f));
 		AnimatePerfectHit();
@@ -140,7 +157,8 @@ public class Player : MonoBehaviour {
 
 	private void AnimatePerfectHit()
 	{
-		HitEffect.transform.position = transform.localPosition;
+		Debug.LogError("perfect");
+		HitEffect.transform.position = transform.localPosition + new Vector3(0, 0.45f,0 );
 		HitEffect.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
 		HitEffect.SetActive(true);
 		HitEffect.GetComponent<Animator>().SetTrigger("Perfect");
@@ -162,6 +180,14 @@ public class Player : MonoBehaviour {
 		HitEffect.GetComponent<Animator>().ResetTrigger("Great");
 		HitEffect.GetComponent<Animator>().ResetTrigger("Perfect");
 		HitEffect.SetActive(false);
+		Debug.LogError("disabled" +
+		               "");
+	}
+
+	private IEnumerator DisableHitIndicatorAfterCooldown()
+	{
+		yield return new WaitForSecondsRealtime(0.05f);
+		transform.GetChild(2).gameObject.SetActive(false);
 	}
 
 	private IEnumerator ResetHitAnimation()

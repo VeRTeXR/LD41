@@ -9,6 +9,8 @@ public class ShowPanels : MonoBehaviour {
 	public GameObject PausePanel;							//Store a reference to the Game Object PausePanel 
 	public GameObject GameplayPanel;
 	public GameObject FinishPanel;
+	public GameObject GameplayArea;
+	
 	
 	public void ShowOptionsPanel()
 	{
@@ -35,11 +37,34 @@ public class ShowPanels : MonoBehaviour {
 	public void ShowGameplay()
 	{
 		GameplayPanel.SetActive(true);
+		ShowGameplayArea();
 	}
 
 	public void HideGameplay()
 	{
 		GameplayPanel.SetActive(false);
+		HideGameplayArea();
+	}
+
+	public void HideGameplayArea()
+	{
+		GameplayArea.SetActive(false);
+	}
+	
+	public void ShowGameplayArea()
+	{
+		GameplayArea.SetActive(true);
+	}
+
+
+	public void ShowFinishPanel()
+	{
+		FinishPanel.SetActive(true);
+	}
+
+	public void HideFinishPanel()
+	{
+		FinishPanel.SetActive(false);
 	}
 	
 	public void ShowPausePanel()

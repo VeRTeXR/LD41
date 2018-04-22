@@ -6,6 +6,7 @@ public class StartOptions : MonoBehaviour {
 	public bool InMainMenu = true;
 	public Animator AnimColorFade;
 	public Animator AnimMenuAlpha;
+	public Animator GameplayMenuAlpha;
 	public AnimationClip FadeColorAnimationClip;
 	public AnimationClip FadeAlphaAnimationClip;
 	public Pause PauseScript;
@@ -70,6 +71,7 @@ public class StartOptions : MonoBehaviour {
 	{
 		yield return new WaitForSecondsRealtime(FadeAlphaAnimationClip.length);
 		_showPanels.HideMenu();
+		AnimMenuAlpha.ResetTrigger("fade");
 	}
 
 	public void StartGameInScene()
@@ -82,10 +84,29 @@ public class StartOptions : MonoBehaviour {
 
 	}
 
+	public void GameOver()
+	{
+		GameplayMenuAlpha.SetTrigger("fade");
+		_showPanels.HideGameplay();
+		StartCoroutine("HideDelayed");
+		_showPanels.ShowFinishPanel(); 
+	}
+
+	public void Retry()
+	{
+		_showPanels.ShowGameplay();
+		Score.Instance.Reset();
+		Manager.Instance.Retry();
+		_showPanels.HideFinishPanel(); 
+		
+		StartGameInScene();
+	}
+	
 	private void FadeAndDisableMenuPanel()
 	{
 		AnimMenuAlpha.SetTrigger("fade");
 		StartCoroutine("HideDelayed");
+		
 	}
 
 	private void ChangeMusicOnStartIfAppropriate()

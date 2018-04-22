@@ -19,6 +19,6 @@ public class SelectableMarkerCallback : MonoBehaviour, IPointerEnterHandler
 
 	private void EnableMarker(bool isEnabled)
 	{
-		transform.GetChild(1).gameObject.SetActive(isEnabled);
+		transform.GetChild(0).gameObject.SetActive(isEnabled);
 	} 
 }

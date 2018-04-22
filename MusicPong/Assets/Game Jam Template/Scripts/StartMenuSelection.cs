@@ -5,7 +5,6 @@ using UnityEngine;
 public class StartMenuSelection : MonoBehaviour
 {
 	public GameObject[] _button;
-	public GameObject _menuSelector;
 	private bool _inputAllowed;
 
 	public StartMenuSelection(GameObject[] button)
@@ -20,7 +19,7 @@ public class StartMenuSelection : MonoBehaviour
 		{
 			_button[i] = transform.GetChild(i).gameObject;
 		}
-		_button[0].transform.GetChild(1).gameObject.SetActive(true);
+		_button[0].transform.GetChild(0).gameObject.SetActive(true);
 		_inputAllowed = true;
 	}
 
@@ -28,7 +27,7 @@ public class StartMenuSelection : MonoBehaviour
 	{
 		if (_inputAllowed)
 		{
-			if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+			if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))
 			{
 				_inputAllowed = false;
 				StartCoroutine(SwitchActiveButtonPosition());
@@ -50,35 +49,35 @@ public class StartMenuSelection : MonoBehaviour
 
 	private int ActiveButton()
 	{
-		if (_button[0].transform.GetChild(1).gameObject.activeSelf)
+		if (_button[0].transform.GetChild(0).gameObject.activeSelf)
 		{
 			return 0;
 		}
-		if (_button[1].transform.GetChild(1).gameObject.activeSelf)
+		if (_button[1].transform.GetChild(0).gameObject.activeSelf)
 			return 1;
 		return 1;
 	}
 
 	public void DisableMarker()
 	{
-		_button[0].transform.GetChild(1).gameObject.SetActive(false);
-		_button[1].transform.GetChild(1).gameObject.SetActive(false);
+		_button[0].transform.GetChild(0).gameObject.SetActive(false);
+		_button[1].transform.GetChild(0).gameObject.SetActive(false);
 	}
 	
 	private IEnumerator SwitchActiveButtonPosition()
 	{
-		if (_button[0].transform.GetChild(1).gameObject.activeSelf)
+		if (_button[0].transform.GetChild(0).gameObject.activeSelf)
 		{
-			_button[0].transform.GetChild(1).gameObject.SetActive(false);
-			_button[1].transform.GetChild(1).gameObject.SetActive(true);
+			_button[0].transform.GetChild(0).gameObject.SetActive(false);
+			_button[1].transform.GetChild(0).gameObject.SetActive(true);
 			SetSelectedButtonPosition(1);
 			yield return new WaitForSecondsRealtime(0.1f);
 			_inputAllowed = true;
 		}
 		else
 		{
-			_button[1].transform.GetChild(1).gameObject.SetActive(false);
-			_button[0].transform.GetChild(1).gameObject.SetActive(true);
+			_button[1].transform.GetChild(0).gameObject.SetActive(false);
+			_button[0].transform.GetChild(0).gameObject.SetActive(true);
 			SetSelectedButtonPosition(0);
 			yield return new WaitForSecondsRealtime(0.1f);
 			_inputAllowed = true;

@@ -18,7 +18,9 @@ public class Score : MonoBehaviour{
 	public int Missed;
 	private string highScoreKey = "highScore";
 	private string playerName = "playerName";
-	private bool isAnimatingScoreText;
+	private bool _isAnimatingScoreText;
+	private bool _isAnimatingGrowing;
+	private bool _isAnimatingShrink;
 
 	private Vector3 HitTextFinalSize = new Vector3(0.8f, 0.8f,0.8f);
 	
@@ -51,13 +53,13 @@ public class Score : MonoBehaviour{
 		if (ScoreGuiText == null) return;
 		ScoreGuiText.text = _score.ToString ();
 
-		if (isAnimatingScoreText)
+		if (_isAnimatingScoreText)
 		{
 			HitGuiText.transform.localScale = Vector3.Lerp(HitGuiText.transform.localScale, HitTextFinalSize, Time.deltaTime*3);
 			if (HitGuiText.transform.localScale == HitTextFinalSize)
 			{
 				HitGuiText.transform.localScale = Vector3.zero;
-				isAnimatingScoreText = false;
+				_isAnimatingScoreText = false;
 			}
 		}
 
@@ -94,12 +96,18 @@ public class Score : MonoBehaviour{
 		}
 	}
 
+	public int GetTotalScore()
+	{
+		Debug.LogError("returnScore");
+		return _score;
+	}
+
 	private void ShowHitGuiText(Hit type)
 	{
 		
 		HitGuiText.transform.localScale = Vector3.zero;
 		HitGuiText.text = type.ToString();
-		isAnimatingScoreText = true;
+		_isAnimatingScoreText = true;
 
 	}
 

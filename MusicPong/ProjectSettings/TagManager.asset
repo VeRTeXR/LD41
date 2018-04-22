@@ -8,6 +8,8 @@ TagManager:
   - Spawn
   - Ball
   - Bound
+  - Hp
+  - GameplayArea
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - 
   - Ball
   - Player
-  - 
+  - Background
   - 
   - 
   - 
@@ -44,4 +46,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI
+    uniqueID: 1163539997
     locked: 0

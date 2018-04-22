@@ -12,6 +12,7 @@ public class BallSpawner : MonoBehaviour
 		{
 			Ball = Instantiate(Resources.Load("Prefabs/Ball") as GameObject);
 			Ball.transform.position = transform.position;
+			Ball.transform.parent = Manager.Instance.GameplayArea.transform;
 		}
 		else
 			Ball.transform.position = transform.position;

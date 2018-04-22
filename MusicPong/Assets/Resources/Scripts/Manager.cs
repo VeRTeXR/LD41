@@ -19,6 +19,7 @@ public class Manager : MonoBehaviour {
 	public int level;
 	public GameObject StartMenu;
 	public GameObject ScoreManager;
+	public GameObject GameplayArea;
 
 	private GameObject levelImage;
 	private Text levelText;
@@ -29,7 +30,7 @@ public class Manager : MonoBehaviour {
 
 	void Start () {
 		
-		HP = 20;
+		HP = 3;
 		if (Instance == null) {
 			Instance = this;
 		}
@@ -43,6 +44,7 @@ public class Manager : MonoBehaviour {
 		{
 			PauseScript = StartMenu.GetComponent<Pause>();
 		}
+		GameplayArea = GameObject.FindGameObjectWithTag("GameplayArea");
 		InitGame ();
 	}
 
@@ -51,28 +53,18 @@ public class Manager : MonoBehaviour {
 	}
 
 
-	void InitGame() {
-//		doingSetup = true;
-//		levelStartCountdown += Time.unscaledTime;
-//		Time.timeScale = 0;
-//		levelImage = GameObject.Find ("LevelImage");
-//		levelText = GameObject.Find ("LevelText").GetComponent<Text> ();
-//		levelText.text = "Dive " + level;
-//		levelImage.SetActive (true);
-//		Invoke ("HideLevelImage", 1);
-//		boardScript.SetupScene (level);
-
-if(GameObject.FindGameObjectWithTag("Player") == null)
+	void InitGame()
+	{
+		player = GameObject.FindGameObjectWithTag("Player");
+		spawn = GameObject.FindGameObjectWithTag("Spawn");
+		if (GameObject.FindGameObjectWithTag("Player") == null)
 		{
-			spawn = GameObject.FindGameObjectWithTag("Spawn");
-			Instantiate(player, spawn.transform.position, spawn.transform.rotation);
+			var p = Instantiate(Resources.Load("Prefabs/Player") as GameObject, spawn.transform.position, spawn.transform.rotation);
+			p.transform.parent = GameplayArea.transform;
 		}
-		else 
-		{
-			spawn = GameObject.FindGameObjectWithTag("Spawn");
-			player = GameObject.FindGameObjectWithTag("Player");
+		else
 			player.transform.position = spawn.transform.position;
-		}
+		ScoreManager = Score.Instance.gameObject;
 	}
 
 	void Update () {
@@ -91,21 +83,6 @@ if(GameObject.FindGameObjectWithTag("Player") == null)
 			//Debug.Log(level);
 			//	reload will actually reload from beginning
 		}
-
-		if (Input.GetKeyDown(KeyCode.Q))
-		{
-			Score.Instance.AddPoint(100);
-		}
-//        if (levelImage.activeSelf) {
-//			if (Input.GetKeyDown (KeyCode.R)) {
-//				SceneManager.LoadScene("StartScn", LoadSceneMode.Single);
-//				level = -1;
-//				score = 0;
-//				HP = 20;
-//				//Debug.Log(level);
-//				//reload will actually reload from beginning
-//			}
-//		}
 	}
 
 	void HideLevelImage () {
@@ -118,16 +95,37 @@ if(GameObject.FindGameObjectWithTag("Player") == null)
 		//display node diagram of story
 		//level survived?
 		//
+		StartMenu.GetComponent<StartOptions>().GameOver();
 		FindObjectOfType<Score> ().Save ();
-		levelText.text = "You survived " + level + " levels";
-		levelImage.SetActive (true);
+//		levelText.text = "You survived " + level + " levels";
+//		levelImage.SetActive (true);
+	}
+
+	public void Retry()
+	{
+		Instance.HP = 4;
+		InitGame();
 	}
 
 	public void OutOfBound()
 	{
+		Debug.LogError(Instance.HP);
+		var HpObject = GameObject.FindWithTag("Hp");
+		if (Instance.HP >= 3)
+		{
+			for (var i = 0; i < HpObject.transform.childCount; i++)
+				HpObject.transform.GetChild(i).GetComponent<Image>().color = Color.white;
+		}
 		Instance.HP--;
+		for (var i = 0; i < HpObject.transform.childCount; i++)
+		{
+			if (Instance.HP - 1 < i)
+			{
+				HpObject.transform.GetChild(i).GetComponent<Image>().color = Color.black;
+			} 
+		}
 		if (HP <= 0)
-			Restart();
+			GameOver(); 
 		else
 			ResetBall();
 	}
@@ -137,7 +135,7 @@ if(GameObject.FindGameObjectWithTag("Player") == null)
 		FindObjectOfType<BallSpawner>().ResetBall();
 	}
 
-	private void Restart () {
+	public void Restart () {
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 }
