@@ -37,7 +37,7 @@ public class Score : MonoBehaviour{
 			Instance = this;
 		else if (Instance != this)
 			Destroy(gameObject);
-
+	
 		DontDestroyOnLoad(gameObject);
 		Initialise ();
 	}
@@ -45,17 +45,20 @@ public class Score : MonoBehaviour{
 	void Update ()
 	{
 		// If the Score is higher than the High Score…
-		if (_highScore < _score) {
+		if (_highScore < _score)
 			_highScore = _score;
-		}
+		
 		//Debug.Log (score);
 		// Display both the Score and High Score
-		if (ScoreGuiText == null) return;
-		ScoreGuiText.text = _score.ToString ();
+		if (ScoreGuiText != null)
+			ScoreGuiText.text = _score.ToString();
+		if (HighScoreGuiText != null)
+			HighScoreGuiText.text = _highScore.ToString();
 
 		if (_isAnimatingScoreText)
 		{
-			HitGuiText.transform.localScale = Vector3.Lerp(HitGuiText.transform.localScale, HitTextFinalSize, Time.deltaTime*3);
+			HitGuiText.transform.localScale =
+				Vector3.Lerp(HitGuiText.transform.localScale, HitTextFinalSize, Time.deltaTime * 3);
 			if (HitGuiText.transform.localScale.x >= 0.65f)
 			{
 				HitGuiText.transform.localScale = Vector3.zero;
