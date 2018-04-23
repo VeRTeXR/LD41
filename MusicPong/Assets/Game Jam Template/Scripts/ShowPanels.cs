@@ -25,6 +25,7 @@ public class ShowPanels : MonoBehaviour {
 
 	public void ShowMenu()
 	{
+		Cursor.visible = true;
 		MenuPanel.SetActive (true);
 	}
 
@@ -65,17 +66,20 @@ public class ShowPanels : MonoBehaviour {
 
 	public void HideFinishPanel()
 	{
+		Cursor.visible = true;
 		FinishPanel.SetActive(false);
 	}
 	
 	public void ShowPausePanel()
 	{
+		Cursor.visible = true;
 		PausePanel.SetActive (true);
 		OptionsTint.SetActive(true);
 	}
 
 	public void HidePausePanel()
 	{
+		Cursor.visible = false;
 		PausePanel.SetActive (false);
 		OptionsTint.SetActive(false);
 	}

@@ -49,29 +49,28 @@ public class Player : MonoBehaviour {
 		float targetVelocityX = input * moveSpeed;
 		Velocity.x = Mathf.SmoothDamp (Velocity.x, targetVelocityX, ref _velocityXSmoothing, accelerationTimeGrounded)*_speedModifier;
 		transform.position += Velocity;
+		
+		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
+			transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
+		
 	}
 	
 	private void FixedUpdate()
 	{
 		if (IsInTriggerRange)
 		{
-			DifferenceInPosition = _ballCollider.bounds.center - new Vector3(_collider.bounds.center.x, _collider.bounds.center.y, 0);
+			DifferenceInPosition =
+				_ballCollider.bounds.center - new Vector3(_collider.bounds.center.x, _collider.bounds.center.y, 0);
 		}
 
-		if (Input.GetKeyDown (KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
+		if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Return) || Input.GetMouseButtonUp(0))
 		{
-			if (_isTappingAvailable)
-			{
-				transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
-				CheckForCollisionAndApplyForce();
-				StartCoroutine(ResetTapStatus());
-				_isTappingAvailable = false;
-			}
+			CheckForCollisionAndApplyForce();
 		}
 
 		if (Input.GetKey(KeyCode.LeftShift))
 		{
-			_speedModifier = 1.5f;
+			_speedModifier = 1.25f;
 		}
 		else
 		{
@@ -192,10 +191,9 @@ public class Player : MonoBehaviour {
 		transform.GetChild(2).gameObject.SetActive(false);
 	}
 
-	private IEnumerator ResetHitAnimation()
+	private void ResetHitAnimation()
 	{
-		yield return  new WaitForSecondsRealtime(0.2f);
-		transform.GetChild(0).GetComponent<Animator>().ResetTrigger("Hit");
+		transform.GetChild(1).GetComponent<Animator>().ResetTrigger("Hit");
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)

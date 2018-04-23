@@ -20,6 +20,14 @@ public class BallSpawner : MonoBehaviour
 			Ball.transform.position = transform.position;
 	}
 
+	void Update()
+	{
+		if (Ball == null)
+		{
+			SpawnBall();
+		}
+	}
+	
 	public void RetryRespawnBall()
 	{
 		BallExploded = 0;

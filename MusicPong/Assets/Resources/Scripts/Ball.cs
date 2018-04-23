@@ -30,7 +30,6 @@ public class Ball : MonoBehaviour
 		if (_forceAddedCount > 3)
 		{
 			StartCoroutine(DestroyAfterApplyForce());
-			
 		}
 	}
 
@@ -38,9 +37,7 @@ public class Ball : MonoBehaviour
 	{
 		yield return new WaitForSeconds(2f);
 		Destroy(gameObject);
-		FindObjectOfType<BallSpawner>().SpawnBall();
 		FindObjectOfType<Player>().AnimateHitEffectAtBallExplode(transform.position);
-		
 	}
 	
 	private void OnCollisionEnter2D(Collision2D other)
