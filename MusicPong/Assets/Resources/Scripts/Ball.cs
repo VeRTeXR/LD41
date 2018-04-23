@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
@@ -14,14 +13,36 @@ public class Ball : MonoBehaviour
 		originalGravityScale = _rigidbody2D.gravityScale;
 	}
 
-	public void AddForce(float forceX, float forceY)
+	public void AddForce(float forceX, float forceY, Score.Hit hitType = Score.Hit.Good)
 	{
-		_forceAddedCount++;
+		if (hitType == Score.Hit.Great)
+		{
+			_forceAddedCount = _forceAddedCount + 2;
+		}
+		
 		_rigidbody2D.velocity = Vector2.zero;
 		_rigidbody2D.AddRelativeForce(new Vector2(forceX, Mathf.Clamp(forceY,0, 15f)),ForceMode2D.Impulse);
 		_rigidbody2D.gravityScale = _rigidbody2D.gravityScale + Random.Range(-0.03f,0.03f);
 	}
 
+	void Update()
+	{
+		if (_forceAddedCount > 3)
+		{
+			StartCoroutine(DestroyAfterApplyForce());
+			
+		}
+	}
+
+	private IEnumerator DestroyAfterApplyForce()
+	{
+		yield return new WaitForSeconds(2f);
+		Destroy(gameObject);
+		FindObjectOfType<BallSpawner>().SpawnBall();
+		FindObjectOfType<Player>().AnimateHitEffectAtBallExplode(transform.position);
+		
+	}
+	
 	private void OnCollisionEnter2D(Collision2D other)
 	{
 		if (other.transform.CompareTag("Bound"))

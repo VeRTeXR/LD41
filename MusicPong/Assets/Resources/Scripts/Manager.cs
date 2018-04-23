@@ -1,18 +1,12 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class Manager : MonoBehaviour {
 	
 	public static Manager Instance = null; 
-	//private Manager managerScript;
-//	public GameObject ExitTest;
-//	public GameObject[] enemy;
 	public GameObject player;
 	public GameObject spawn;
-	//public GameObject ExitTest;
 	public float levelStartDelay = 0.3f;
 	public float levelStartCountdown;
 	public float HP = 3;

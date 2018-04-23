@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using UnityEngine.Experimental.UIElements;
-using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
@@ -32,7 +30,8 @@ public class Player : MonoBehaviour {
 	private Collider2D _ballCollider;
 	private Collider2D _collider;
 	private bool _isTappingAvailable = true;
-	
+	private float _speedModifier = 1;
+
 	void Start()
 	{
 		_thisAudio = GetComponent<AudioSource>();
@@ -48,7 +47,7 @@ public class Player : MonoBehaviour {
 	{
 		var input = Input.GetAxisRaw("Horizontal");
 		float targetVelocityX = input * moveSpeed;
-		Velocity.x = Mathf.SmoothDamp (Velocity.x, targetVelocityX, ref _velocityXSmoothing, accelerationTimeGrounded);
+		Velocity.x = Mathf.SmoothDamp (Velocity.x, targetVelocityX, ref _velocityXSmoothing, accelerationTimeGrounded)*_speedModifier;
 		transform.position += Velocity;
 	}
 	
@@ -68,6 +67,15 @@ public class Player : MonoBehaviour {
 				StartCoroutine(ResetTapStatus());
 				_isTappingAvailable = false;
 			}
+		}
+
+		if (Input.GetKey(KeyCode.LeftShift))
+		{
+			_speedModifier = 1.5f;
+		}
+		else
+		{
+			_speedModifier = 1;
 		}
 	}
 
@@ -120,13 +128,13 @@ public class Player : MonoBehaviour {
 
 	private void GoodHit()
 	{
-		_ball.AddForce(DifferenceInPosition.x + 0.05f * Random.Range(-5, 5) * 0.7f, 7.5f / DifferenceInPosition.y);
+		_ball.AddForce(DifferenceInPosition.x + 0.05f * Random.Range(-5, 5) * 0.7f, 7.5f / DifferenceInPosition.y,Score.Hit.Good);
 		Score.Instance.AddHitCount(Score.Hit.Good);
 	}
 
 	private void GreatHit()
 	{
-		_ball.AddForce(DifferenceInPosition.x + Random.Range(-3f, 3f) * 0.5f, 7.5f / DifferenceInPosition.y);
+		_ball.AddForce(DifferenceInPosition.x + Random.Range(-3f, 3f) * 0.5f, 7.5f / DifferenceInPosition.y,Score.Hit.Great);
 		Score.Instance.AddHitCount(Score.Hit.Great);
 		StartCoroutine(AnimateGreatHit());
 	}
@@ -134,7 +142,7 @@ public class Player : MonoBehaviour {
 	private void PerfectHit()
 	{
 		_ball.AddForce(DifferenceInPosition.x + Random.Range(-1.2f, 1.2f) * 2f,
-			7.5f / Mathf.Clamp(DifferenceInPosition.y,0.1f,100f));
+			7.5f / Mathf.Clamp(DifferenceInPosition.y,0.1f,100f), Score.Hit.Perfect);
 		StartCoroutine(AnimatePerfectHit());
 		gameObject.GetComponent<ScreenShake>().TriggerScreenShake();
 		Score.Instance.AddHitCount(Score.Hit.Perfect);
@@ -157,6 +165,16 @@ public class Player : MonoBehaviour {
 		HitEffect.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
 		HitEffect.SetActive(true);
 		HitEffect.GetComponent<Animator>().SetTrigger("Great");
+		StartCoroutine(DisableHitEffectAfterAnimationPlayed());
+	}
+
+	public void  AnimateHitEffectAtBallExplode(Vector3 ballPosition)
+	{
+		HitEffect.transform.position = ballPosition;
+		HitEffect.transform.position = ballPosition + new Vector3(0, 0.45f,0 );
+		HitEffect.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+		HitEffect.GetComponent<Animator>().SetTrigger("Perfect");
+		HitEffect.SetActive(true);
 		StartCoroutine(DisableHitEffectAfterAnimationPlayed());
 	}
 
@@ -187,11 +205,6 @@ public class Player : MonoBehaviour {
 		if(_ballCollider == null)
 			_ballCollider = _ball.GetComponent<CircleCollider2D>();
 		IsInTriggerRange = true;
-	}
-
-	private void OnTriggerStay2D(Collider2D other)
-	{
-		Debug.LogError(_ball);
 	}
 
 	private void OnTriggerExit2D(Collider2D other)
