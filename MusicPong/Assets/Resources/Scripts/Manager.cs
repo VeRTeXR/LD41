@@ -68,21 +68,10 @@ public class Manager : MonoBehaviour {
 		}
 	}
 
-	void HideLevelImage () {
-		levelImage.SetActive (false);
-		doingSetup = false;
-	}
-
 	public void GameOver() {
-
-		//display node diagram of story
-		//level survived?
-		//
 		Destroy(GameObject.FindGameObjectWithTag("Ball"));
 		StartMenu.GetComponent<StartOptions>().GameOver();
 		FindObjectOfType<Score> ().Save ();
-//		levelText.text = "You survived " + level + " levels";
-//		levelImage.SetActive (true);
 	}
 
 	public void Retry()
