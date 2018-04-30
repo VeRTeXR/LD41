@@ -4,11 +4,8 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
-
-	float accelerationTimeAirborne = 0.2f;
 	float accelerationTimeGrounded = 0.1f;
 	private float moveSpeed = 0.1f;
-	private float restartLevelDelay = 20f;
 	private float _buttoncooldown = 0.5f;
 	private int _buttoncount = 0;
 	private float _playerHp;
@@ -30,6 +27,7 @@ public class Player : MonoBehaviour
 	private Collider2D _collider;
 	private float _speedModifier = 1;
 	private bool _isHoldingKey;
+	private HitEffectAnimator _hitEffectAnimator;
 
 	void Start()
 	{
@@ -38,6 +36,7 @@ public class Player : MonoBehaviour
 		if (HitEffect == null)
 		{
 			HitEffect = Instantiate(Resources.Load("Prefabs/HitEffect") as GameObject);
+			_hitEffectAnimator = HitEffect.GetComponent<HitEffectAnimator>();
 			HitEffect.SetActive(false);
 		}
 	}
@@ -138,40 +137,21 @@ public class Player : MonoBehaviour
 	private IEnumerator AnimatePerfectHit()
 	{
 		yield return new WaitForSecondsRealtime(HitAnimationClip.length-0.1f);
-		HitEffect.transform.position = transform.position + new Vector3(0, 0.45f,0 );
-		HitEffect.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
-		HitEffect.SetActive(true);
-		HitEffect.GetComponent<Animator>().SetTrigger("Perfect");
-		StartCoroutine(DisableHitEffectAfterAnimationPlayed());
+		_hitEffectAnimator.AnimatePerfectHitEffect(transform.position);
 	}
 	
 	private IEnumerator AnimateGreatHit()
 	{
 		yield return new WaitForSecondsRealtime(HitAnimationClip.length-0.1f);
-		HitEffect.transform.position = transform.position;
-		HitEffect.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
-		HitEffect.SetActive(true);
-		HitEffect.GetComponent<Animator>().SetTrigger("Great");
-		StartCoroutine(DisableHitEffectAfterAnimationPlayed());
+		_hitEffectAnimator.AnimateGreatHitEffect(transform.position);
 	}
 
 	public void  AnimateHitEffectAtBallExplode(Vector3 ballPosition)
 	{
-		HitEffect.transform.position = ballPosition;
-		HitEffect.transform.position = ballPosition + new Vector3(0, 0.45f,0 );
-		HitEffect.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
-		HitEffect.GetComponent<Animator>().SetTrigger("Perfect");
-		HitEffect.SetActive(true);
-		StartCoroutine(DisableHitEffectAfterAnimationPlayed());
+		_hitEffectAnimator.AnimateHitEffectAtBallExplode(ballPosition);
 	}
 
-	private IEnumerator DisableHitEffectAfterAnimationPlayed()
-	{
-		yield return new WaitForSecondsRealtime(0.45f);
-		HitEffect.GetComponent<Animator>().ResetTrigger("Great");
-		HitEffect.GetComponent<Animator>().ResetTrigger("Perfect");
-		HitEffect.SetActive(false);
-	}
+
 
 	private IEnumerator DisableHitIndicatorAfterCooldown()
 	{
