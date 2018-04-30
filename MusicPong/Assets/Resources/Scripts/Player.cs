@@ -2,10 +2,11 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
 
-	float accelerationTimeAirborne = 0.2f; 		
-	float accelerationTimeGrounded = 0.1f; 	
+	float accelerationTimeAirborne = 0.2f;
+	float accelerationTimeGrounded = 0.1f;
 	private float moveSpeed = 0.1f;
 	private float restartLevelDelay = 20f;
 	private float _buttoncooldown = 0.5f;
@@ -18,19 +19,17 @@ public class Player : MonoBehaviour {
 	private float _velocityXSmoothing;
 	public GameObject Explosion;
 	public bool IsInTriggerRange;
-	public Vector2 DifferenceInPosition;
+	public Vector2 DifferenceInPosition = new Vector2(100, 100);
+
 	private Ball _ball;
 	public GameObject HitEffect;
 	public AnimationClip HitAnimationClip;
 	private AudioSource _thisAudio; //TODO:: refactor this later
 	public AudioClip HitSound;
-	
-	
-	Animator _animator;
 	private Collider2D _ballCollider;
 	private Collider2D _collider;
-	private bool _isTappingAvailable = true;
 	private float _speedModifier = 1;
+	private bool _isHoldingKey;
 
 	void Start()
 	{
@@ -49,10 +48,11 @@ public class Player : MonoBehaviour {
 		float targetVelocityX = input * moveSpeed;
 		Velocity.x = Mathf.SmoothDamp (Velocity.x, targetVelocityX, ref _velocityXSmoothing, accelerationTimeGrounded)*_speedModifier;
 		transform.position += Velocity;
-		
-		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
-			transform.GetChild(1).gameObject.GetComponent<Animator>().SetTrigger("Hit");
-		
+
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			CheckForCollisionAndApplyForce();
+		}
 	}
 	
 	private void FixedUpdate()
@@ -62,12 +62,6 @@ public class Player : MonoBehaviour {
 			DifferenceInPosition =
 				_ballCollider.bounds.center - new Vector3(_collider.bounds.center.x, _collider.bounds.center.y, 0);
 		}
-
-		if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Return) || Input.GetMouseButtonUp(0))
-		{
-			CheckForCollisionAndApplyForce();
-		}
-
 		if (Input.GetKey(KeyCode.LeftShift))
 		{
 			_speedModifier = 1.25f;
@@ -78,19 +72,13 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	private IEnumerator ResetTapStatus()
-	{
-		yield return new WaitForSecondsRealtime(0.0025f);
-		_isTappingAvailable = true;
-	}
-
 	private void CheckForCollisionAndApplyForce()
 	{
 		if (DifferenceInPosition.y < 2f && DifferenceInPosition.y > 1f)
 		{
 			GoodHit();
 			StartCoroutine(EnableHitIndicatorAfterAnimation());
-			_thisAudio.PlayOneShot(HitSound);
+			_thisAudio.PlayOneShot(HitSound);;
 			return;
 		}
 		if (DifferenceInPosition.y < 1f && DifferenceInPosition.y > 0.5f)
@@ -110,7 +98,6 @@ public class Player : MonoBehaviour {
 		{
 			Missed();
 		}
-		
 	}
 
 	private IEnumerator EnableHitIndicatorAfterAnimation()
@@ -140,6 +127,7 @@ public class Player : MonoBehaviour {
 
 	private void PerfectHit()
 	{
+		if(_ball==null) return;
 		_ball.AddForce(DifferenceInPosition.x + Random.Range(-1.2f, 1.2f) * 2f,
 			7.5f / Mathf.Clamp(DifferenceInPosition.y,0.1f,100f), Score.Hit.Perfect);
 		StartCoroutine(AnimatePerfectHit());
@@ -189,11 +177,6 @@ public class Player : MonoBehaviour {
 	{
 		yield return new WaitForSecondsRealtime(0.025f);
 		transform.GetChild(2).gameObject.SetActive(false);
-	}
-
-	private void ResetHitAnimation()
-	{
-		transform.GetChild(1).GetComponent<Animator>().ResetTrigger("Hit");
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)

@@ -53,6 +53,7 @@ GameObject:
   - component: {fileID: 4734143344735306}
   - component: {fileID: 212881456395513022}
   - component: {fileID: 95234480767748464}
+  - component: {fileID: 114974769585713138}
   m_Layer: 0
   m_Name: Player (2)
   m_TagString: Untagged
@@ -158,7 +159,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.175, y: 20}
+  m_Size: {x: 0.74, y: 20}
   m_EdgeRadius: 0
 --- !u!61 &61640560150618274
 BoxCollider2D:
@@ -313,6 +314,17 @@ MonoBehaviour:
   HitEffect: {fileID: 0}
   HitAnimationClip: {fileID: 7400000, guid: a08baa376d9c344fdaa4cf3ee105f6d3, type: 2}
   HitSound: {fileID: 8300000, guid: 4cea1c82b8f7d47edbd5f8a8d4eac931, type: 3}
+--- !u!114 &114974769585713138
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1428118101458818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c60bc87491f77e48862dcc9ce3add06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212380311891912016
 SpriteRenderer:
   m_ObjectHideFlags: 1
