@@ -6,6 +6,7 @@ public class StartOptions : MonoBehaviour {
 	public bool InMainMenu = true;
 	public Animator AnimColorFade;
 	public Animator AnimMenuAlpha;
+	public Animator AnimRetryAlpha;
 	public Animator GameplayMenuAlpha;
 	public AnimationClip FadeColorAnimationClip;
 	public AnimationClip FadeAlphaAnimationClip;
@@ -54,7 +55,13 @@ public class StartOptions : MonoBehaviour {
 		}
 	}
 
-
+	public IEnumerator HideRetry()
+	{
+		yield return new WaitForSecondsRealtime(FadeAlphaAnimationClip.length);
+		_showPanels.HideRetry();
+		AnimMenuAlpha.ResetTrigger("fade");
+	}	
+	
 	public IEnumerator HideDelayed()
 	{
 		yield return new WaitForSecondsRealtime(FadeAlphaAnimationClip.length);
@@ -67,7 +74,7 @@ public class StartOptions : MonoBehaviour {
 		yield return new WaitForSecondsRealtime(FadeAlphaAnimationClip.length);
 		_showPanels.HideGameplay();
 		GameplayMenuAlpha.ResetTrigger("fade");
-		_showPanels.ShowFinishPanel(); 
+		_showPanels.ShowRetryPanel(); 
 	}
 	
 	public void StartGameInScene()
@@ -82,6 +89,7 @@ public class StartOptions : MonoBehaviour {
 
 	public void GameOver()
 	{
+		_showPanels.RetryPanel.GetComponent<CanvasGroup>().alpha = 1;
 		GameplayMenuAlpha.SetTrigger("fade");
 		StartCoroutine("HideGameplay");
 		
@@ -91,10 +99,11 @@ public class StartOptions : MonoBehaviour {
 	{
 		_showPanels.GameplayPanel.GetComponent<CanvasGroup>().alpha = 1;
 		StartGameInScene();
+		
 		Manager.Instance.RetryResetBall();
 		Score.Instance.Reset();
 		Manager.Instance.Retry();
-		_showPanels.HideFinishPanel(); 
+		FadeAndDisableRetryPanel();
 	}
 	
 	private void FadeAndDisableMenuPanel()
@@ -103,6 +112,12 @@ public class StartOptions : MonoBehaviour {
 		StartCoroutine("HideDelayed");
 	}
 
+	private void FadeAndDisableRetryPanel()
+	{
+		AnimRetryAlpha.SetTrigger("fade");
+		StartCoroutine("HideRetry");
+	}
+	
 	private void ChangeMusicOnStartIfAppropriate()
 	{
 		if (ChangeMusicOnStart)

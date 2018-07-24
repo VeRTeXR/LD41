@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class Player : MonoBehaviour
@@ -180,9 +179,4 @@ public class Player : MonoBehaviour
 		Gizmos.color = Color.red;
 		Gizmos.DrawLine(new Vector3( DifferenceInPosition.x-1, DifferenceInPosition.y+transform.localPosition.y, 0), new Vector3(DifferenceInPosition.x+1, DifferenceInPosition.y+transform.localPosition.y,0));
 	}
-
-	private void Restart () {
-		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-	}
-
 }

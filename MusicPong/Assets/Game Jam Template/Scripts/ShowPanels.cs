@@ -7,9 +7,8 @@ public class ShowPanels : MonoBehaviour {
 	public GameObject MenuPanel;							//Store a reference to the Game Object MenuPanel 
 	public GameObject PausePanel;							//Store a reference to the Game Object PausePanel 
 	public GameObject GameplayPanel;
-	public GameObject FinishPanel;
+	public GameObject RetryPanel;
 	public GameObject GameplayArea;
-	
 	
 	public void ShowOptionsPanel()
 	{
@@ -32,6 +31,11 @@ public class ShowPanels : MonoBehaviour {
 	public void HideMenu()
 	{
 		MenuPanel.SetActive (false);
+	}
+
+	public void HideRetry()
+	{
+		RetryPanel.SetActive(false);
 	}
 
 	public void ShowGameplay()
@@ -58,16 +62,9 @@ public class ShowPanels : MonoBehaviour {
 		GameplayArea.SetActive(true);
 	}
 
-
-	public void ShowFinishPanel()
+	public void ShowRetryPanel()
 	{
-		FinishPanel.SetActive(true);
-	}
-
-	public void HideFinishPanel()
-	{
-		Cursor.visible = true;
-		FinishPanel.SetActive(false);
+		RetryPanel.SetActive(true);
 	}
 	
 	public void ShowPausePanel()
